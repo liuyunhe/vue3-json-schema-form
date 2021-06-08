@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+
 module.exports = {
   devServer: {
     overlay: {
@@ -16,5 +18,8 @@ module.exports = {
     // headers: {
     //   'Access-Control-Allow-Origin': '*',
     // }
-  }
+  },
+  chainWebpack(config) {
+    config.plugin('monaco').use(new MonacoWebpackPlugin())
+  },
 };
