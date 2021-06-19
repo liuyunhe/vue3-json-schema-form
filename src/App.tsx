@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { defineComponent, ref, Ref, reactive, watchEffect } from 'vue'
 import { createUseStyles } from 'vue-jss'
 
@@ -135,6 +133,7 @@ export default defineComponent({
 
     const classesRef = useStyles()
 
+    // eslint-disable-next-line
     const handleChange = (v: any) => {
       demo.data = v
       demo.dataCode = toJson(v)
@@ -211,7 +210,7 @@ export default defineComponent({
               </div>
             </div>
             <div class={classes.form}>
-              <SchemaForm/>
+              <SchemaForm />
               {/* <SchemaForm
               schema={demo.schema!}
               uiSchema={demo.uiSchema!}
