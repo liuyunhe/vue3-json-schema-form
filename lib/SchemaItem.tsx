@@ -1,14 +1,21 @@
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { SchemaTypes, FieldPropsDefine } from './types'
 import NumberField from './fields/NumberField.vue'
 import StringField from './fields/StringField.vue'
+import { retrieveSchema } from './utils'
 
 export default defineComponent({
   name: 'SchemaItem',
   props: FieldPropsDefine,
   setup(props) {
+    const retrievedSchemaRef = computed(() => {
+      const { schema, rootSchema, value } = props
+      return retrieveSchema(schema, rootSchema, value)
+    })
     return () => {
-      const schema = props.schema
+      const { schema } = props
+
+      const retrievedSchema = retrievedSchemaRef.value
 
       //  TODO: 如果type没有指定，我们需要猜测type
       const type = schema?.type
@@ -29,7 +36,7 @@ export default defineComponent({
         }
       }
 
-      return <Component {...props} />
+      return <Component {...props} schema={retrievedSchema} />
     }
   }
 })
