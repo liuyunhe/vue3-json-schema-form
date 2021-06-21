@@ -2,7 +2,7 @@ export default {
   name: 'Simple',
   schema: {
     description: 'A simple form example.',
-    type: 'string',
+    type: 'object',
     required: ['firstName', 'lastName'],
     properties: {
       firstName: {
@@ -15,6 +15,17 @@ export default {
       telephone: {
         type: 'string',
         minLength: 10
+      },
+      staticArray: {
+        type: 'array',
+        items: [
+          {
+            type: 'string'
+          },
+          {
+            type: 'number'
+          }
+        ]
       }
     }
   },
