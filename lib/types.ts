@@ -1,4 +1,4 @@
-import { PropType } from 'vue'
+import { PropType, defineComponent } from 'vue'
 
 export enum SchemaTypes {
   'NUMBER' = 'number',
@@ -7,6 +7,24 @@ export enum SchemaTypes {
   'OBJECT' = 'object',
   'ARRAY' = 'array',
   'BOOLEAN' = 'boolean'
+}
+
+export interface VueJsonSchemaConfig {
+  title?: string
+  descrription?: string
+  component?: string
+  options?: {
+    [key: string]: any
+  }
+  withFormItem?: boolean
+  widget?: 'checkbox' | 'textarea' | 'select' | 'radio' | 'range' | string
+  items?: UISchema | UISchema[]
+  propertiesOrder?: string[]
+  controls?: {
+    sortable?: boolean
+    removeable?: boolean
+    addable?: boolean
+  }
 }
 
 type SchemaRef = { $ref: string }
@@ -20,7 +38,7 @@ export interface Schema {
   default?: any
 
   properties?: {
-    [key: string]: Schema | { $ref: string }
+    [key: string]: Schema
   }
   items?: Schema | Schema[] | SchemaRef
   uniqueItems?: any
@@ -30,6 +48,8 @@ export interface Schema {
   oneOf?: Schema[]
   anyOf?: Schema[]
   allOf?: Schema[]
+  // TODO: uiSchema
+  // vjsg?: VueJsonSchemaConfig
   required?: string[]
   enum?: any[]
   enumNames?: any[]
@@ -57,5 +77,21 @@ export const FieldPropsDefine = {
   onChange: {
     type: Function as PropType<(v: any) => void>,
     required: true
+  },
+  rootSchema: {
+    type: Object as PropType<Schema>,
+    requried: true
   }
 } as const
+
+export interface UISchema extends VueJsonSchemaConfig {
+  properties?: {
+    [property: string]: UISchema
+  }
+}
+
+const TypeHelperComponent = defineComponent({
+  props: FieldPropsDefine
+})
+
+export type CommonFieldDefine = typeof TypeHelperComponent
