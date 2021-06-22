@@ -10,13 +10,13 @@ export default defineComponent({
     const context = useVJSFContext()
 
     const handleObjectFieldChange = (key: string, v: any) => {
-      const value: any = isObject(props.value) ? props.value : {}
+      const obj: any = isObject(props.value) ? props.value : {}
       if (v === undefined) {
-        delete value[key]
+        delete obj[key]
       } else {
-        value[key] = v
+        obj[key] = v
       }
-      props.onChange(value)
+      props.onChange(obj)
     }
 
     return () => {

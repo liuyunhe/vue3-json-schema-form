@@ -11,7 +11,6 @@ export default defineComponent({
   setup(props) {
     const handleChange = (e: Event): void => {
       const currentTarget = e.target as HTMLInputElement
-      console.log(currentTarget.value)
       props.onChange(currentTarget.value)
     }
     return {
