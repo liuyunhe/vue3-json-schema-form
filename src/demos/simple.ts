@@ -70,6 +70,6 @@ export default {
     age: 75,
     bio: 'Roundhouse kicking asses since 1940',
     password: 'noneed',
-    singleTypeArray: [{ name: 'liuyunge', age: 18 }]
+    singleTypeArray: [{ name: 'liuyunhe', age: 18 }]
   }
 }
