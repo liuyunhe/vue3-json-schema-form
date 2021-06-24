@@ -96,7 +96,7 @@ const TypeHelperComponent = defineComponent({
 
 export type CommonFieldDefine = typeof TypeHelperComponent
 
-const CommonWidgetPropsDefine = {
+export const CommonWidgetPropsDefine = {
   value: {},
   onChange: {
     type: Function as PropType<(v: any) => void>,
@@ -104,7 +104,7 @@ const CommonWidgetPropsDefine = {
   }
 } as const
 
-const SelectionWidgetPropsDefine = {
+export const SelectionWidgetPropsDefine = {
   ...CommonWidgetPropsDefine,
   options: {
     type: Array as PropType<
@@ -115,15 +115,26 @@ const SelectionWidgetPropsDefine = {
     >,
     required: true
   }
+} as const
+
+export type CommonWidgetDefine = DefineComponent<typeof CommonWidgetPropsDefine>
+export type SelectionWidgetDefine = DefineComponent<
+  typeof SelectionWidgetPropsDefine
+>
+
+export enum SelectionWidgetNames {
+  SelectionWidget = 'SelectionWidget'
 }
 
-type CommonWidgetDefine = DefineComponent<typeof CommonWidgetPropsDefine>
-type SelectionWidgetDefine = DefineComponent<typeof SelectionWidgetPropsDefine>
+export enum CommonWidgetNames {
+  TextWidget = 'TextWidget',
+  NumberWidget = 'NumberWidget'
+}
 
 export interface Theme {
   widgets: {
-    SelectionWidget: SelectionWidgetDefine
-    TextWidget: CommonWidgetDefine
-    NumberWidget: CommonFieldDefine
+    [SelectionWidgetNames.SelectionWidget]: SelectionWidgetDefine
+    [CommonWidgetNames.TextWidget]: CommonWidgetDefine
+    [CommonWidgetNames.NumberWidget]: CommonWidgetDefine
   }
 }

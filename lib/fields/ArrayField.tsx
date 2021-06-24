@@ -1,5 +1,5 @@
 import { defineComponent, PropType } from 'vue'
-import { FieldPropsDefine, Schema } from '../types'
+import { FieldPropsDefine, Schema, SelectionWidgetNames } from '../types'
 import { useVJSFContext } from '../context'
 // import SelectionWidget from '../widgets/Selection'
 import { createUseStyles } from 'vue-jss'
@@ -101,7 +101,7 @@ export default defineComponent({
   props: FieldPropsDefine,
   setup(props) {
     const context = useVJSFContext()
-    const SelectionWidgetRef = getWidget('SelectionWidget')
+    const SelectionWidgetRef = getWidget(SelectionWidgetNames.SelectionWidget)
 
     const handleMultiTypeChange = (v: any, index: number) => {
       const { value } = props

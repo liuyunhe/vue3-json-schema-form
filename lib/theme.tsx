@@ -6,7 +6,7 @@ import {
   PropType,
   provide
 } from 'vue'
-import { Theme } from './types'
+import { Theme, SelectionWidgetNames, CommonWidgetNames } from './types'
 
 const THEME_PROVIDER_KEY = Symbol()
 
@@ -27,13 +27,16 @@ const ThemeProvider = defineComponent({
   }
 })
 
-export function getWidget(name: string): ComputedRef<any> {
+// eslint-disable-next-line
+export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(
+  name: T
+) {
   const context: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY)
   if (!context) {
     throw new Error('vjsf theme required')
   }
-  const widgetRef = computed(() => (context.value.widgets as any)[name])
+  const widgetRef = computed(() => context.value.widgets[name])
   return widgetRef
 }
 
