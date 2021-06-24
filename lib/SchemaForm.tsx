@@ -1,4 +1,4 @@
-import { defineComponent, provide, reactive } from 'vue'
+import { defineComponent, provide } from 'vue'
 import { FieldPropsDefine } from './types'
 import SchemaItem from './SchemaItem'
 import { SchemaFormContextKey } from './context'
@@ -10,9 +10,9 @@ export default defineComponent({
     const handleChange = (v: any) => {
       props.onChange(v)
     }
-    const context = reactive({
+    const context: any = {
       SchemaItem
-    })
+    }
     provide(SchemaFormContextKey, context)
     return () => {
       const { schema, value } = props
