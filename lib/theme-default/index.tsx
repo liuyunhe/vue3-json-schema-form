@@ -1,3 +1,4 @@
+import SelectionWidget from './SelectionWidget'
 import SelectionWidget from './Selection'
 
 import { CommonWidgetPropsDefine, CommonWidgetDefine } from '../types'
