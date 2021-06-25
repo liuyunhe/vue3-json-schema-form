@@ -1,22 +1,24 @@
-import { FieldPropsDefine } from '../../lib/types'
+import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
 import { defineComponent } from 'vue'
+import { getWidget } from '../theme'
 
 export default defineComponent({
   name: 'NumberField',
   props: FieldPropsDefine,
   setup(props) {
-    const handleChange = (e: Event): void => {
-      const currentTarget = e.target as HTMLInputElement
-      const num = Number(currentTarget.value)
+    const handleChange = (v: string): void => {
+      const num = Number(v)
       if (Number.isNaN(num)) {
         props.onChange(undefined)
       } else {
         props.onChange(num)
       }
     }
+    const NumberWidgetRef = getWidget(CommonWidgetNames.NumberWidget)
     return () => {
+      const NumberWidget = NumberWidgetRef.value
       const { value } = props
-      return <input type="text" value={value as any} onInput={handleChange} />
+      return <NumberWidget value={value} onChange={handleChange} />
     }
   }
 })

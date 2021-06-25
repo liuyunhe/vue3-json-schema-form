@@ -1,17 +1,20 @@
-import { FieldPropsDefine } from '../../lib/types'
+import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
 import { defineComponent } from 'vue'
+import { getWidget } from '../theme'
 
 export default defineComponent({
   name: 'StringField',
   props: FieldPropsDefine,
   setup(props) {
-    const handleChange = (e: Event): void => {
-      const currentTarget = e.target as HTMLInputElement
-      props.onChange(currentTarget.value)
+    const handleChange = (v: string) => {
+      props.onChange(v + '1')
     }
+    const TextWidgetRef = getWidget(CommonWidgetNames.TextWidget)
     return () => {
+      const TextWidget = TextWidgetRef.value
+      // eslint-disable-next-line
       const { value } = props
-      return <input type="text" value={value as any} onInput={handleChange} />
+      return <TextWidget value={value} onChange={handleChange} />
     }
   }
 })
