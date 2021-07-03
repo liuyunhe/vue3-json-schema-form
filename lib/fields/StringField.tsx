@@ -7,7 +7,7 @@ export default defineComponent({
   props: FieldPropsDefine,
   setup(props) {
     const handleChange = (v: string) => {
-      props.onChange(v + '1')
+      props.onChange(v)
     }
     const TextWidgetRef = getWidget(CommonWidgetNames.TextWidget)
     return () => {

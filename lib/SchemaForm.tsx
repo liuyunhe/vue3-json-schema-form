@@ -1,12 +1,25 @@
-import { defineComponent, provide } from 'vue'
-import { FieldPropsDefine } from './types'
+import {
+  defineComponent,
+  PropType,
+  provide,
+  Ref,
+  shallowRef,
+  watch,
+  watchEffect
+} from 'vue'
+import { FieldPropsDefine, Schema } from './types'
 import SchemaItem from './SchemaItem'
 import { SchemaFormContextKey } from './context'
+import Ajv, { Options } from 'ajv'
 interface ContextRef {
   doValidate: () => {
     errors: any[]
     valid: boolean
   }
+}
+
+const defaultAjvOptions: Options = {
+  allErrors: true
 }
 
 export default defineComponent({
@@ -27,6 +40,13 @@ export default defineComponent({
     const context: any = {
       SchemaItem
     }
+    const validatorRef: Ref<Ajv> = shallowRef() as any
+    watchEffect(() => {
+      validatorRef.value = new Ajv({
+        ...defaultAjvOptions,
+        ...props.ajvOptions
+      })
+    })
     watch(
       () => props.contextRef,
       () => {
