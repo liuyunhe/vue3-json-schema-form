@@ -159,16 +159,19 @@ export default defineComponent({
     const handleDataChange = (v: string) => handleCodeChange('data', v)
     const handleUISchemaChange = (v: string) => handleCodeChange('uiSchema', v)
 
-    const handleValidate = () => {
-      const { valid, errors, errorSchema } = methodRef.value.doValidate()
-      console.log(valid, errors, errorSchema)
-    }
+    // const handleValidate = () => {
+    //   const { valid, errors, errorSchema } = methodRef.value.doValidate()
+    //   console.log(valid, errors, errorSchema)
+    // }
+
+    const contextRef = ref()
+    const nameRef = ref()
 
     return () => {
       const classes = classesRef.value
       const selected = selectedRef.value
 
-      console.log(methodRef)
+      console.log(methodRef, nameRef)
 
       return (
         // <VjsfDefaultThemeProvider>
@@ -218,6 +221,8 @@ export default defineComponent({
                   schema={demo.schema}
                   onChange={handleChange}
                   value={demo.data}
+                  contextRef={contextRef}
+                  ref={nameRef}
                 />
               </ThemeProvider>
               {/* <SchemaForm
@@ -236,7 +241,11 @@ export default defineComponent({
               ]}
               /> */}
               <div style={{ marginTop: '20px' }}>
-                <button onClick={handleValidate}>校验</button>
+                <button
+                  onClick={() => console.log(contextRef.value.doValidate())}
+                >
+                  校验
+                </button>
               </div>
             </div>
           </div>
