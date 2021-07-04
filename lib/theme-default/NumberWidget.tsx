@@ -2,6 +2,7 @@ import { CommonWidgetPropsDefine, CommonWidgetDefine } from '../types'
 import { defineComponent } from 'vue'
 
 const NumberWidget: CommonWidgetDefine = defineComponent({
+  name: 'NumberWidget',
   props: CommonWidgetPropsDefine,
   setup(props) {
     const handleChange = (e: Event): void => {

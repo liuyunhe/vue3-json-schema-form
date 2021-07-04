@@ -97,7 +97,7 @@ const ArrayItemWrapper = defineComponent({
  */
 
 export default defineComponent({
-  name: 'Array Field',
+  name: 'ArrayField',
   props: FieldPropsDefine,
   setup(props) {
     const context = useVJSFContext()
@@ -149,7 +149,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { schema, value, rootSchema } = props
+      const { schema, value, rootSchema, errorSchema } = props
       const SelectionWidget = SelectionWidgetRef.value
       const SchemaItem = context.SchemaItem
       // const SelectionWidget = context.theme.widgets.SelectionWidget
@@ -165,6 +165,7 @@ export default defineComponent({
             key={index}
             value={arr[index]}
             rootSchema={rootSchema}
+            errorSchema={errorSchema[index] || {}}
             onChange={(v: any) => handleMultiTypeChange(v, index)}
           />
         ))
@@ -183,6 +184,7 @@ export default defineComponent({
               key={index}
               value={v}
               rootSchema={rootSchema}
+              errorSchema={errorSchema[index] || {}}
               onChange={(v: any) => handleArrayItemChange(v, index)}
             />
           </ArrayItemWrapper>
@@ -198,6 +200,7 @@ export default defineComponent({
             onChange={props.onChange}
             value={props.value}
             options={options}
+            errors={errorSchema.__errors}
           />
         )
       }
