@@ -1,4 +1,4 @@
-import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
+import { FieldPropsDefine, CommonWidgetNames, Schema } from '../../lib/types'
 import { defineComponent } from 'vue'
 import { getWidget } from '../theme'
 
@@ -13,12 +13,13 @@ export default defineComponent({
     return () => {
       const TextWidget = TextWidgetRef.value
       // eslint-disable-next-line
-      const { value, errorSchema } = props
+      const { value, errorSchema, schema } = props
       return (
         <TextWidget
           value={value}
           errors={errorSchema.__errors}
           onChange={handleChange}
+          schema={schema as Schema}
         />
       )
     }

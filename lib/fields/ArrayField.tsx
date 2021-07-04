@@ -201,6 +201,7 @@ export default defineComponent({
             value={props.value}
             options={options}
             errors={errorSchema.__errors}
+            schema={schema as Schema}
           />
         )
       }
