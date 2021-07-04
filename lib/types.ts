@@ -138,3 +138,12 @@ export interface Theme {
     [CommonWidgetNames.NumberWidget]: CommonWidgetDefine
   }
 }
+
+// fix error TS2456: Type alias 'ErrorSchema' circularly references itself
+interface ErrorSchemaObject {
+  [level: string]: ErrorSchema
+}
+
+export type ErrorSchema = ErrorSchemaObject & {
+  __errors: string[]
+}
