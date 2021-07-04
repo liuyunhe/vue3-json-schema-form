@@ -13,8 +13,14 @@ export default defineComponent({
     return () => {
       const TextWidget = TextWidgetRef.value
       // eslint-disable-next-line
-      const { value } = props
-      return <TextWidget value={value} onChange={handleChange} />
+      const { value, errorSchema } = props
+      return (
+        <TextWidget
+          value={value}
+          errors={errorSchema.__errors}
+          onChange={handleChange}
+        />
+      )
     }
   }
 })

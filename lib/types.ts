@@ -81,6 +81,10 @@ export const FieldPropsDefine = {
   rootSchema: {
     type: Object as PropType<Schema>,
     requried: true
+  },
+  errorSchema: {
+    type: Object as PropType<ErrorSchema>,
+    required: true
   }
 } as const
 
@@ -101,6 +105,9 @@ export const CommonWidgetPropsDefine = {
   onChange: {
     type: Function as PropType<(v: any) => void>,
     required: true
+  },
+  errors: {
+    type: Array as PropType<string[]>
   }
 } as const
 
@@ -145,5 +152,5 @@ interface ErrorSchemaObject {
 }
 
 export type ErrorSchema = ErrorSchemaObject & {
-  __errors: string[]
+  __errors?: string[]
 }

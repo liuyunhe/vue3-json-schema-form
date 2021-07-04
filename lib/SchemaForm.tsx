@@ -7,7 +7,7 @@ import {
   watch,
   watchEffect
 } from 'vue'
-import { FieldPropsDefine, Schema } from './types'
+import { FieldPropsDefine, Schema, ErrorSchema } from './types'
 import SchemaItem from './SchemaItem'
 import { SchemaFormContextKey } from './context'
 import Ajv, { Options } from 'ajv'
@@ -28,6 +28,9 @@ export default defineComponent({
   name: 'SchemaForm',
   props: {
     ...FieldPropsDefine,
+    errorSchema: {
+      type: Object as PropType<ErrorSchema>
+    },
     contextRef: {
       type: Object as PropType<Ref<ContextRef | undefined>>
     },
@@ -46,6 +49,7 @@ export default defineComponent({
     const context: any = {
       SchemaItem
     }
+    const errorSchemaRef: Ref<ErrorSchema> = shallowRef({})
     const validatorRef: Ref<Ajv> = shallowRef() as any
     watchEffect(() => {
       validatorRef.value = new Ajv({
@@ -70,6 +74,9 @@ export default defineComponent({
                 props.schema as Schema,
                 props.locale
               )
+
+              errorSchemaRef.value = result.errorSchema as ErrorSchema
+
               return result
             }
           }
@@ -88,6 +95,7 @@ export default defineComponent({
           rootSchema={schema}
           value={value}
           onChange={handleChange}
+          errorSchema={errorSchemaRef.value}
         />
       )
     }
