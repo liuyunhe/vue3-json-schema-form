@@ -151,7 +151,6 @@ export function mergeObjects(obj1: any, obj2: any, concatArrays = false) {
   // Recursively merge deeply nested objects.
   const acc = Object.assign({}, obj1) // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
-    console.log(key)
     const left = obj1 ? obj1[key] : {},
       right = obj2[key]
     if (

@@ -27,7 +27,6 @@ export default defineComponent({
       const properties = schema?.properties || {}
 
       const currentValue: any = isObject(value) ? value : {}
-      console.log(errorSchema)
 
       return Object.keys(properties).map((k: string, index: number) => (
         <SchemaItem
