@@ -42,7 +42,7 @@ const useStyles = createUseStyles({
   // }
 })
 
-export default defineComponent({
+const FormItem = defineComponent({
   name: 'FormItem',
   props: CommonWidgetPropsDefine,
   setup(props, { slots }) {
@@ -64,3 +64,24 @@ export default defineComponent({
     }
   }
 })
+
+export default FormItem
+
+// HOC:Higher Order Component: 高阶组件
+// Composition API只能抽离非渲染逻辑，HOC可以抽离渲染逻辑
+// eslint-disable-next-line
+export function withFormItem(Widget: any): any {
+  return defineComponent({
+    name: `Wrapped${Widget.name}`,
+    props: CommonWidgetPropsDefine,
+    setup(props, { attrs }) {
+      return () => {
+        return (
+          <FormItem {...props}>
+            <Widget {...props} {...attrs}></Widget>
+          </FormItem>
+        )
+      }
+    }
+  }) as any
+}
