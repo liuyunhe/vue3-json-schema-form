@@ -16,10 +16,15 @@ export default {
     }
   },
   // eslint-disable-next-line
-  customValidate(data: any, errors: any) {
-    if (data.pass1 !== data.pass2) {
-      errors.pass2.addError('密码必须相同！')
-    }
+  async customValidate(data: any, errors: any) {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        if (data.pass1 !== data.pass2) {
+          errors.pass2.addError('密码必须相同！')
+        }
+        resolve()
+      }, 2000)
+    })
   },
   uiSchema: {},
   default: 1

@@ -77,13 +77,13 @@ interface validateFormDataObject {
   valid: boolean
 }
 
-export function validateFormData(
+export async function validateFormData(
   validator: Ajv,
   formData: unknown,
   shema: Schema,
   locale = 'zh',
   customValidate?: (data: any, errors: any) => void
-): validateFormDataObject {
+): Promise<validateFormDataObject> {
   let validatorError = null
   try {
     validator.validate(shema, formData)
@@ -112,7 +112,7 @@ export function validateFormData(
     }
   }
   const proxy = createErrorProxy()
-  customValidate(formData, proxy)
+  await customValidate(formData, proxy)
   const newErrorSchema = mergeObjects(errorSchema, proxy, true)
   return {
     errors,
@@ -137,7 +137,6 @@ function createErrorProxy() {
       }
       const res = Reflect.get(target, key, reciver)
       if (res === undefined) {
-        console.log(key)
         const p: any = createErrorProxy()
         ;(target as any)[key] = p
         return p
@@ -152,6 +151,7 @@ export function mergeObjects(obj1: any, obj2: any, concatArrays = false) {
   // Recursively merge deeply nested objects.
   const acc = Object.assign({}, obj1) // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
+    console.log(key)
     const left = obj1 ? obj1[key] : {},
       right = obj2[key]
     if (

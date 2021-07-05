@@ -74,11 +74,11 @@ export function withFormItem(Widget: any): any {
   return defineComponent({
     name: `Wrapped${Widget.name}`,
     props: CommonWidgetPropsDefine,
-    setup(props, { attrs }) {
+    setup(props, { attrs, slots }) {
       return () => {
         return (
           <FormItem {...props}>
-            <Widget {...props} {...attrs}></Widget>
+            <Widget {...props} {...attrs} slots={slots}></Widget>
           </FormItem>
         )
       }

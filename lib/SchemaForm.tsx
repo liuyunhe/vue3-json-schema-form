@@ -2,6 +2,7 @@ import {
   defineComponent,
   PropType,
   provide,
+  ref,
   Ref,
   shallowRef,
   watch,
@@ -14,10 +15,10 @@ import Ajv, { Options } from 'ajv'
 import { validateFormData } from './validate'
 
 interface ContextRef {
-  doValidate: () => {
+  doValidate: () => Promise<{
     errors: any[]
     valid: boolean
-  }
+  }>
 }
 
 const defaultAjvOptions: Options = {
@@ -60,6 +61,37 @@ export default defineComponent({
         ...props.ajvOptions
       })
     })
+
+    const validateResolveRef = ref()
+    const validateIndex = ref(0)
+
+    watch(
+      () => props.value,
+      () => {
+        if (validateResolveRef.value) {
+          doValidate()
+        }
+      },
+      { deep: true }
+    )
+
+    async function doValidate() {
+      console.log('start validate ------')
+      const index = (validateIndex.value += 1)
+      const result = await validateFormData(
+        validatorRef.value,
+        props.value,
+        props.schema as Schema,
+        props.locale,
+        props.customValidate
+      )
+      if (index !== validateIndex.value) return
+      console.log('end validate ------')
+      errorSchemaRef.value = result.errorSchema as ErrorSchema
+      validateResolveRef.value(result)
+      validateResolveRef.value = undefined
+    }
+
     watch(
       () => props.contextRef,
       () => {
@@ -67,21 +99,10 @@ export default defineComponent({
           props.contextRef.value = {
             doValidate() {
               console.log('-----')
-              // const valid = validatorRef.value.validate(
-              //   props.schema as Schema,
-              //   props.value
-              // )
-              const result = validateFormData(
-                validatorRef.value,
-                props.value,
-                props.schema as Schema,
-                props.locale,
-                props.customValidate
-              )
-
-              errorSchemaRef.value = result.errorSchema as ErrorSchema
-
-              return result
+              return new Promise((resolve) => {
+                validateResolveRef.value = resolve
+                doValidate()
+              })
             }
           }
         }

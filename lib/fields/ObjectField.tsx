@@ -27,12 +27,13 @@ export default defineComponent({
       const properties = schema?.properties || {}
 
       const currentValue: any = isObject(value) ? value : {}
+      console.log(errorSchema)
 
       return Object.keys(properties).map((k: string, index: number) => (
         <SchemaItem
           schema={properties[k]}
           rootSchema={rootSchema}
-          errorSchema={errorSchema[k] || {}}
+          errorSchema={errorSchema[k] || errorSchema[`/${k}`] || {}}
           value={currentValue[k]}
           key={index}
           onChange={(v: any) => handleObjectFieldChange(k, v)}
