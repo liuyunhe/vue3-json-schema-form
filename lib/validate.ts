@@ -2,6 +2,7 @@ import { Schema, ErrorSchema } from './types'
 import i18n from 'ajv-i18n'
 import Ajv, { ErrorObject } from 'ajv'
 import { toPath } from 'lodash'
+import { isObject } from './utils'
 
 interface TransformErrorsObject {
   name: string
@@ -80,7 +81,8 @@ export function validateFormData(
   validator: Ajv,
   formData: unknown,
   shema: Schema,
-  locale = 'zh'
+  locale = 'zh',
+  customValidate?: (data: any, errors: any) => void
 ): validateFormDataObject {
   let validatorError = null
   try {
@@ -102,9 +104,67 @@ export function validateFormData(
 
   const errorSchema = toErrorSchema(errors)
 
+  if (!customValidate) {
+    return {
+      errors,
+      errorSchema,
+      valid: errors.length === 0
+    }
+  }
+  const proxy = createErrorProxy()
+  customValidate(formData, proxy)
+  const newErrorSchema = mergeObjects(errorSchema, proxy, true)
   return {
     errors,
-    errorSchema,
+    errorSchema: newErrorSchema,
     valid: errors.length === 0
   }
+}
+
+function createErrorProxy() {
+  const raw = {}
+  return new Proxy(raw, {
+    get(target, key, reciver) {
+      if (key === 'addError') {
+        return (msg: string) => {
+          const __errors = Reflect.get(target, '__errors', reciver)
+          if (__errors && Array.isArray(__errors)) {
+            __errors.push(msg)
+          } else {
+            ;(target as any).__errors = [msg]
+          }
+        }
+      }
+      const res = Reflect.get(target, key, reciver)
+      if (res === undefined) {
+        console.log(key)
+        const p: any = createErrorProxy()
+        ;(target as any)[key] = p
+        return p
+      }
+      return res
+    }
+  })
+}
+
+// eslint-disable-next-line
+export function mergeObjects(obj1: any, obj2: any, concatArrays = false) {
+  // Recursively merge deeply nested objects.
+  const acc = Object.assign({}, obj1) // Prevent mutation of source object.
+  return Object.keys(obj2).reduce((acc, key) => {
+    const left = obj1 ? obj1[key] : {},
+      right = obj2[key]
+    if (
+      obj1 &&
+      Object.prototype.hasOwnProperty.call(obj1, key) &&
+      isObject(right)
+    ) {
+      acc[key] = mergeObjects(left, right, concatArrays)
+    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+      acc[key] = left.concat(right)
+    } else {
+      acc[key] = right
+    }
+    return acc
+  }, acc)
 }

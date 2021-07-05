@@ -40,6 +40,9 @@ export default defineComponent({
     locale: {
       type: String,
       default: 'zh'
+    },
+    customValidate: {
+      type: Function as PropType<(data: any, errors: any) => void>
     }
   },
   setup(props) {
@@ -72,7 +75,8 @@ export default defineComponent({
                 validatorRef.value,
                 props.value,
                 props.schema as Schema,
-                props.locale
+                props.locale,
+                props.customValidate
               )
 
               errorSchemaRef.value = result.errorSchema as ErrorSchema

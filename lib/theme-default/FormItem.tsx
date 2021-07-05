@@ -31,7 +31,7 @@ const useStyles = createUseStyles({
   //   color: '#777'
   // },
   error: {
-    height: 30,
+    // height: 30,
     fontSize: 12,
     padding: 0,
     margin: 0,
