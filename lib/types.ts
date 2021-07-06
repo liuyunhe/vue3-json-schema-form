@@ -123,6 +123,9 @@ export const CommonWidgetPropsDefine = {
   schema: {
     type: Object as PropType<Schema>,
     required: true
+  },
+  options: {
+    type: Object as PropType<{ [key: string]: any }>
   }
 } as const
 

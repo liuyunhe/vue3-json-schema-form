@@ -34,7 +34,9 @@ export default {
         widget: PasswordWidget
       },
       pass2: {
-        widget: PasswordWidget
+        options: {
+          color: 'red'
+        }
       }
     }
   },

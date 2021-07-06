@@ -13,6 +13,10 @@ export default defineComponent({
       const widgetRef = getWidget(CommonWidgetNames.TextWidget, props.uiSchema)
       return widgetRef.value
     })
+    const widgetOptionsRef = computed(() => {
+      const { options } = props.uiSchema
+      return options
+    })
     return () => {
       const TextWidget = TextWidgetRef.value
       // eslint-disable-next-line
@@ -23,6 +27,7 @@ export default defineComponent({
           errors={errorSchema.__errors}
           onChange={handleChange}
           schema={schema as Schema}
+          options={widgetOptionsRef.value}
         />
       )
     }
