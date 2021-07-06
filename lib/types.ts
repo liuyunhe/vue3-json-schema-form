@@ -17,7 +17,14 @@ export interface VueJsonSchemaConfig {
     [key: string]: any
   }
   withFormItem?: boolean
-  widget?: 'checkbox' | 'textarea' | 'select' | 'radio' | 'range' | string
+  widget?:
+    | 'checkbox'
+    | 'textarea'
+    | 'select'
+    | 'radio'
+    | 'range'
+    | string
+    | CommonWidgetDefine
   items?: UISchema | UISchema[]
   propertiesOrder?: string[]
   controls?: {
@@ -84,6 +91,10 @@ export const FieldPropsDefine = {
   },
   errorSchema: {
     type: Object as PropType<ErrorSchema>,
+    required: true
+  },
+  uiSchema: {
+    type: Object as PropType<UISchema>,
     required: true
   }
 } as const

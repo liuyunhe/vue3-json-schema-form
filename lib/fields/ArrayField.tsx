@@ -1,5 +1,10 @@
 import { defineComponent, PropType } from 'vue'
-import { FieldPropsDefine, Schema, SelectionWidgetNames } from '../types'
+import {
+  FieldPropsDefine,
+  Schema,
+  SelectionWidgetNames,
+  UISchema
+} from '../types'
 import { useVJSFContext } from '../context'
 // import SelectionWidget from '../widgets/Selection'
 import { createUseStyles } from 'vue-jss'
@@ -149,7 +154,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { schema, value, rootSchema, errorSchema } = props
+      const { schema, value, rootSchema, errorSchema, uiSchema } = props
       const SelectionWidget = SelectionWidgetRef.value
       const SchemaItem = context.SchemaItem
       // const SelectionWidget = context.theme.widgets.SelectionWidget
@@ -159,16 +164,23 @@ export default defineComponent({
       if (isMultiType) {
         const items: Schema[] = schema?.items as any
         const arr = Array.isArray(value) ? value : []
-        return items.map((schema: Schema, index: number) => (
-          <SchemaItem
-            schema={schema}
-            key={index}
-            value={arr[index]}
-            rootSchema={rootSchema}
-            errorSchema={errorSchema[index] || {}}
-            onChange={(v: any) => handleMultiTypeChange(v, index)}
-          />
-        ))
+        return items.map((schema: Schema, index: number) => {
+          const itemsUiSchema = uiSchema.items
+          const us = Array.isArray(itemsUiSchema)
+            ? itemsUiSchema[index] || {}
+            : itemsUiSchema || {}
+          return (
+            <SchemaItem
+              schema={schema}
+              key={index}
+              value={arr[index]}
+              rootSchema={rootSchema}
+              errorSchema={errorSchema[index] || {}}
+              onChange={(v: any) => handleMultiTypeChange(v, index)}
+              uiSchema={us}
+            />
+          )
+        })
       } else if (!isSelect) {
         const arr = Array.isArray(value) ? value : []
         return arr.map((v: any, index: number) => (
@@ -186,6 +198,7 @@ export default defineComponent({
               rootSchema={rootSchema}
               errorSchema={errorSchema[index] || {}}
               onChange={(v: any) => handleArrayItemChange(v, index)}
+              uiSchema={(uiSchema.items as UISchema) || {}}
             />
           </ArrayItemWrapper>
         ))
