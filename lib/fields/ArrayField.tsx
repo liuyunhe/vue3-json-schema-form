@@ -111,7 +111,7 @@ export default defineComponent({
         SelectionWidgetNames.SelectionWidget,
         props.uiSchema
       )
-      return widgetRef.value
+      return widgetRef
     })
 
     const handleMultiTypeChange = (v: any, index: number) => {

@@ -20,7 +20,7 @@ export default defineComponent({
         CommonWidgetNames.NumberWidget,
         props.uiSchema
       )
-      return widgetRef.value
+      return widgetRef
     })
     return () => {
       const NumberWidget = NumberWidgetRef.value

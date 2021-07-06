@@ -4,8 +4,7 @@ import {
   defineComponent,
   inject,
   PropType,
-  provide,
-  ref
+  provide
 } from 'vue'
 import {
   Theme,
@@ -41,7 +40,7 @@ export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(
   uiSchema?: UISchema
 ) {
   if (uiSchema?.widget && isObject(uiSchema.widget)) {
-    return ref(uiSchema.widget as CommonWidgetDefine)
+    return uiSchema.widget as CommonWidgetDefine
   }
   const context: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY)
@@ -49,7 +48,7 @@ export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(
     throw new Error('vjsf theme required')
   }
   const widgetRef = computed(() => context.value.widgets[name])
-  return widgetRef
+  return widgetRef.value
 }
 
 export default ThemeProvider

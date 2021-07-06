@@ -1,4 +1,11 @@
-import { defineComponent, ref, Ref, reactive, watchEffect } from 'vue'
+import {
+  defineComponent,
+  ref,
+  Ref,
+  reactive,
+  watchEffect,
+  shallowRef
+} from 'vue'
 import { createUseStyles } from 'vue-jss'
 
 import MonacoEditor from './components/MonacoEditor'
@@ -121,12 +128,15 @@ export default defineComponent({
       customValidate: undefined
     })
 
+    const uiSchema = shallowRef({})
+
     watchEffect(() => {
       const index = selectedRef.value
       const d: any = demos[index]
       demo.schema = d.schema
       demo.data = d.default
-      demo.uiSchema = d.uiSchema
+      // demo.uiSchema = d.uiSchema
+      uiSchema.value = d.uiSchema
       demo.schemaCode = toJson(d.schema)
       demo.dataCode = toJson(d.default)
       demo.uiSchemaCode = toJson(d.uiSchema)
@@ -226,7 +236,7 @@ export default defineComponent({
                   contextRef={contextRef}
                   ref={nameRef}
                   customValidate={demo.customValidate}
-                  uiSchema={demo.uiSchema || {}}
+                  uiSchema={uiSchema.value || {}}
                 />
               </ThemeProvider>
               {/* <SchemaForm
