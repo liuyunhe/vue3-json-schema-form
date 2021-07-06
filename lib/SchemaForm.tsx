@@ -1,4 +1,5 @@
 import {
+  computed,
   defineComponent,
   PropType,
   provide,
@@ -8,7 +9,14 @@ import {
   watch,
   watchEffect
 } from 'vue'
-import { FieldPropsDefine, Schema, ErrorSchema, UISchema } from './types'
+import {
+  FieldPropsDefine,
+  Schema,
+  ErrorSchema,
+  UISchema,
+  CustomFormat,
+  CommonWidgetDefine
+} from './types'
 import SchemaItem from './SchemaItem'
 import { SchemaFormContextKey } from './context'
 import Ajv, { Options } from 'ajv'
@@ -47,14 +55,14 @@ export default defineComponent({
     },
     uiSchema: {
       type: Object as PropType<UISchema>
+    },
+    customFormats: {
+      type: [Array, Object] as PropType<CustomFormat[] | CustomFormat>
     }
   },
   setup(props) {
     const handleChange = (v: any) => {
       props.onChange(v)
-    }
-    const context: any = {
-      SchemaItem
     }
     const errorSchemaRef: Ref<ErrorSchema> = shallowRef({})
     const validatorRef: Ref<Ajv> = shallowRef() as any
@@ -63,6 +71,16 @@ export default defineComponent({
         ...defaultAjvOptions,
         ...props.ajvOptions
       })
+      // 自定义校验
+      if (props.customFormats) {
+        const customFormats = Array.isArray(props.customFormats)
+          ? props.customFormats
+          : [props.customFormats]
+
+        customFormats.forEach((format) => {
+          validatorRef.value.addFormat(format.name, format.definition)
+        })
+      }
     })
 
     const validateResolveRef = ref()
@@ -114,6 +132,24 @@ export default defineComponent({
         immediate: true
       }
     )
+    const formatMapRef = computed(() => {
+      if (props.customFormats) {
+        const customFormats = Array.isArray(props.customFormats)
+          ? props.customFormats
+          : [props.customFormats]
+
+        return customFormats.reduce((result, format) => {
+          result[format.name] = format.component
+          return result
+        }, {} as { [key: string]: CommonWidgetDefine })
+      } else {
+        return {}
+      }
+    })
+    const context: any = {
+      SchemaItem,
+      formatMapRef
+    }
     provide(SchemaFormContextKey, context)
     return () => {
       const { schema, value, uiSchema } = props

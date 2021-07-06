@@ -1,4 +1,5 @@
 import { PropType, defineComponent, DefineComponent } from 'vue'
+import { FormatDefinition } from 'ajv'
 
 export enum SchemaTypes {
   'NUMBER' = 'number',
@@ -171,4 +172,10 @@ interface ErrorSchemaObject {
 
 export type ErrorSchema = ErrorSchemaObject & {
   __errors?: string[]
+}
+
+export interface CustomFormat {
+  name: string
+  definition: FormatDefinition<string | number>
+  component: CommonWidgetDefine
 }
