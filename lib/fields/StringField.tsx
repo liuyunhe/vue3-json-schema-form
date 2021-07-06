@@ -1,5 +1,5 @@
 import { FieldPropsDefine, CommonWidgetNames, Schema } from '../../lib/types'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { getWidget } from '../theme'
 
 export default defineComponent({
@@ -9,7 +9,10 @@ export default defineComponent({
     const handleChange = (v: string) => {
       props.onChange(v)
     }
-    const TextWidgetRef = getWidget(CommonWidgetNames.TextWidget)
+    const TextWidgetRef = computed(() => {
+      const widgetRef = getWidget(CommonWidgetNames.TextWidget, props.uiSchema)
+      return widgetRef.value
+    })
     return () => {
       const TextWidget = TextWidgetRef.value
       // eslint-disable-next-line
