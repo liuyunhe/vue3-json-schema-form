@@ -1,5 +1,5 @@
 import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { getWidget } from '../theme'
 import { Schema } from '../types'
 
@@ -15,7 +15,13 @@ export default defineComponent({
         props.onChange(num)
       }
     }
-    const NumberWidgetRef = getWidget(CommonWidgetNames.NumberWidget)
+    const NumberWidgetRef = computed(() => {
+      const widgetRef = getWidget(
+        CommonWidgetNames.NumberWidget,
+        props.uiSchema
+      )
+      return widgetRef.value
+    })
     return () => {
       const NumberWidget = NumberWidgetRef.value
       const { value, errorSchema, schema } = props
