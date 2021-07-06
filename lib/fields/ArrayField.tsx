@@ -107,10 +107,7 @@ export default defineComponent({
   setup(props) {
     const context = useVJSFContext()
     const SelectionWidgetRef = computed(() => {
-      const widgetRef = getWidget(
-        SelectionWidgetNames.SelectionWidget,
-        props.uiSchema
-      )
+      const widgetRef = getWidget(SelectionWidgetNames.SelectionWidget, props)
       return widgetRef
     })
 

@@ -16,10 +16,7 @@ export default defineComponent({
       }
     }
     const NumberWidgetRef = computed(() => {
-      const widgetRef = getWidget(
-        CommonWidgetNames.NumberWidget,
-        props.uiSchema
-      )
+      const widgetRef = getWidget(CommonWidgetNames.NumberWidget, props)
       return widgetRef
     })
     return () => {

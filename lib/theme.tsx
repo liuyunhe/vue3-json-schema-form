@@ -2,6 +2,7 @@ import {
   computed,
   ComputedRef,
   defineComponent,
+  ExtractPropTypes,
   inject,
   PropType,
   provide
@@ -10,10 +11,11 @@ import {
   Theme,
   SelectionWidgetNames,
   CommonWidgetNames,
-  UISchema,
+  FieldPropsDefine,
   CommonWidgetDefine
 } from './types'
 import { isObject } from './utils'
+import { useVJSFContext } from './context'
 
 const THEME_PROVIDER_KEY = Symbol()
 
@@ -37,10 +39,20 @@ const ThemeProvider = defineComponent({
 // eslint-disable-next-line
 export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(
   name: T,
-  uiSchema?: UISchema
+  props: ExtractPropTypes<typeof FieldPropsDefine>
 ) {
-  if (uiSchema?.widget && isObject(uiSchema.widget)) {
-    return uiSchema.widget as CommonWidgetDefine
+  const formatContext = useVJSFContext()
+
+  if (props) {
+    const { uiSchema, schema } = props
+    if (uiSchema?.widget && isObject(uiSchema.widget)) {
+      return uiSchema.widget as CommonWidgetDefine
+    }
+    if (schema?.format) {
+      if (formatContext.formatMapRef.value[schema.format]) {
+        return formatContext.formatMapRef.value[schema.format]
+      }
+    }
   }
   const context: ComputedRef<Theme> | undefined =
     inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY)
