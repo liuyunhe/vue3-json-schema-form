@@ -15,11 +15,12 @@ import {
   ErrorSchema,
   UISchema,
   CustomFormat,
-  CommonWidgetDefine
+  CommonWidgetDefine,
+  CustomKeyword
 } from './types'
 import SchemaItem from './SchemaItem'
 import { SchemaFormContextKey } from './context'
-import Ajv, { Options } from 'ajv'
+import Ajv, { KeywordDefinition, Options } from 'ajv'
 import { validateFormData } from './validate'
 
 interface ContextRef {
@@ -53,6 +54,9 @@ export default defineComponent({
     customValidate: {
       type: Function as PropType<(data: any, errors: any) => void>
     },
+    customKeywords: {
+      type: [Array, Object] as PropType<CustomKeyword[] | CustomKeyword>
+    },
     uiSchema: {
       type: Object as PropType<UISchema>
     },
@@ -79,6 +83,18 @@ export default defineComponent({
 
         customFormats.forEach((format) => {
           validatorRef.value.addFormat(format.name, format.definition)
+        })
+      }
+      if (props.customKeywords) {
+        const customKeywords = Array.isArray(props.customKeywords)
+          ? props.customKeywords
+          : [props.customKeywords]
+
+        customKeywords.forEach((keyword) => {
+          validatorRef.value.addKeyword(
+            keyword.name,
+            keyword.definition as KeywordDefinition
+          )
         })
       }
     })
@@ -146,9 +162,30 @@ export default defineComponent({
         return {}
       }
     })
+
+    const transFormSchemaRef = computed(() => {
+      if (props.customKeywords) {
+        const customKeywords = Array.isArray(props.customKeywords)
+          ? props.customKeywords
+          : [props.customKeywords]
+
+        return (schema: Schema) => {
+          let newSchema = schema
+          customKeywords.forEach((keyword) => {
+            if ((newSchema as any)[keyword.name]) {
+              newSchema = keyword.transFormSchema(schema)
+            }
+          })
+          return newSchema
+        }
+      }
+      return (schema: Schema) => schema
+    })
+
     const context: any = {
       SchemaItem,
-      formatMapRef
+      formatMapRef,
+      transFormSchemaRef
     }
     provide(SchemaFormContextKey, context)
     return () => {

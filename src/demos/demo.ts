@@ -7,7 +7,8 @@ export default {
     properties: {
       pass1: {
         type: 'string',
-        minLength: 10,
+        // minLength: 10,
+        test: true,
         title: 'password'
       },
       pass2: {

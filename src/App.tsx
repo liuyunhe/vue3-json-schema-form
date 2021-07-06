@@ -15,6 +15,7 @@ import demos from './demos'
 import SchemaForm, { ThemeProvider } from '../lib'
 import themeDefault from '../lib/theme-default'
 import customFormat from './plugins/customFormat'
+import customKeyword from './plugins/customKeyword'
 
 // console.log(themeDefault)
 
@@ -239,6 +240,7 @@ export default defineComponent({
                   customValidate={demo.customValidate}
                   uiSchema={uiSchema.value || {}}
                   customFormats={customFormat}
+                  customKeywords={customKeyword}
                 />
               </ThemeProvider>
               {/* <SchemaForm

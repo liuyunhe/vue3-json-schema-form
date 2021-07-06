@@ -1,5 +1,6 @@
 import { PropType, defineComponent, DefineComponent } from 'vue'
 import { FormatDefinition } from 'ajv'
+import { MacroKeywordFunc } from 'ajv/dist/types'
 
 export enum SchemaTypes {
   'NUMBER' = 'number',
@@ -178,4 +179,25 @@ export interface CustomFormat {
   name: string
   definition: FormatDefinition<string | number>
   component: CommonWidgetDefine
+}
+
+interface VjsKeywordDefinition {
+  type?: string | Array<string>
+  async?: boolean
+  $data?: boolean
+  errors?: boolean | string
+  metaSchema?: Record<string, unknown>
+
+  schema?: boolean
+  statements?: boolean
+  dependencies?: string[]
+  modifying?: boolean
+  valid?: boolean
+
+  macro: MacroKeywordFunc
+}
+export interface CustomKeyword {
+  name: string
+  definition: VjsKeywordDefinition
+  transFormSchema: (originSchema: Schema) => Schema
 }
