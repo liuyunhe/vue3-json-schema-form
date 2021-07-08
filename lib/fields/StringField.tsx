@@ -1,5 +1,5 @@
-import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
-import { defineComponent } from 'vue'
+import { FieldPropsDefine, CommonWidgetNames, Schema } from '../../lib/types'
+import { computed, defineComponent } from 'vue'
 import { getWidget } from '../theme'
 
 export default defineComponent({
@@ -7,14 +7,29 @@ export default defineComponent({
   props: FieldPropsDefine,
   setup(props) {
     const handleChange = (v: string) => {
-      props.onChange(v + '1')
+      props.onChange(v)
     }
-    const TextWidgetRef = getWidget(CommonWidgetNames.TextWidget)
+    const TextWidgetRef = computed(() => {
+      const widgetRef = getWidget(CommonWidgetNames.TextWidget, props)
+      return widgetRef
+    })
+    const widgetOptionsRef = computed(() => {
+      const { options } = props.uiSchema
+      return options
+    })
     return () => {
       const TextWidget = TextWidgetRef.value
       // eslint-disable-next-line
-      const { value } = props
-      return <TextWidget value={value} onChange={handleChange} />
+      const { value, errorSchema, schema } = props
+      return (
+        <TextWidget
+          value={value}
+          errors={errorSchema.__errors}
+          onChange={handleChange}
+          schema={schema as Schema}
+          options={widgetOptionsRef.value}
+        />
+      )
     }
   }
 })

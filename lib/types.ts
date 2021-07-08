@@ -1,4 +1,6 @@
 import { PropType, defineComponent, DefineComponent } from 'vue'
+import { FormatDefinition } from 'ajv'
+import { MacroKeywordFunc } from 'ajv/dist/types'
 
 export enum SchemaTypes {
   'NUMBER' = 'number',
@@ -17,7 +19,14 @@ export interface VueJsonSchemaConfig {
     [key: string]: any
   }
   withFormItem?: boolean
-  widget?: 'checkbox' | 'textarea' | 'select' | 'radio' | 'range' | string
+  widget?:
+    | 'checkbox'
+    | 'textarea'
+    | 'select'
+    | 'radio'
+    | 'range'
+    | string
+    | CommonWidgetDefine
   items?: UISchema | UISchema[]
   propertiesOrder?: string[]
   controls?: {
@@ -81,6 +90,14 @@ export const FieldPropsDefine = {
   rootSchema: {
     type: Object as PropType<Schema>,
     requried: true
+  },
+  errorSchema: {
+    type: Object as PropType<ErrorSchema>,
+    required: true
+  },
+  uiSchema: {
+    type: Object as PropType<UISchema>,
+    required: true
   }
 } as const
 
@@ -101,6 +118,16 @@ export const CommonWidgetPropsDefine = {
   onChange: {
     type: Function as PropType<(v: any) => void>,
     required: true
+  },
+  errors: {
+    type: Array as PropType<string[]>
+  },
+  schema: {
+    type: Object as PropType<Schema>,
+    required: true
+  },
+  options: {
+    type: Object as PropType<{ [key: string]: any }>
   }
 } as const
 
@@ -137,4 +164,40 @@ export interface Theme {
     [CommonWidgetNames.TextWidget]: CommonWidgetDefine
     [CommonWidgetNames.NumberWidget]: CommonWidgetDefine
   }
+}
+
+// fix error TS2456: Type alias 'ErrorSchema' circularly references itself
+interface ErrorSchemaObject {
+  [level: string]: ErrorSchema
+}
+
+export type ErrorSchema = ErrorSchemaObject & {
+  __errors?: string[]
+}
+
+export interface CustomFormat {
+  name: string
+  definition: FormatDefinition<string | number>
+  component: CommonWidgetDefine
+}
+
+interface VjsKeywordDefinition {
+  type?: string | Array<string>
+  async?: boolean
+  $data?: boolean
+  errors?: boolean | string
+  metaSchema?: Record<string, unknown>
+
+  schema?: boolean
+  statements?: boolean
+  dependencies?: string[]
+  modifying?: boolean
+  valid?: boolean
+
+  macro: MacroKeywordFunc
+}
+export interface CustomKeyword {
+  name: string
+  definition: VjsKeywordDefinition
+  transFormSchema: (originSchema: Schema) => Schema
 }

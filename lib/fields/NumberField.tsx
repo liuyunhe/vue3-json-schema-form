@@ -1,6 +1,7 @@
 import { FieldPropsDefine, CommonWidgetNames } from '../../lib/types'
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { getWidget } from '../theme'
+import { Schema } from '../types'
 
 export default defineComponent({
   name: 'NumberField',
@@ -14,11 +15,21 @@ export default defineComponent({
         props.onChange(num)
       }
     }
-    const NumberWidgetRef = getWidget(CommonWidgetNames.NumberWidget)
+    const NumberWidgetRef = computed(() => {
+      const widgetRef = getWidget(CommonWidgetNames.NumberWidget, props)
+      return widgetRef
+    })
     return () => {
       const NumberWidget = NumberWidgetRef.value
-      const { value } = props
-      return <NumberWidget value={value} onChange={handleChange} />
+      const { value, errorSchema, schema } = props
+      return (
+        <NumberWidget
+          value={value}
+          errors={errorSchema.__errors}
+          onChange={handleChange}
+          schema={schema as Schema}
+        />
+      )
     }
   }
 })

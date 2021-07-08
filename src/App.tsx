@@ -1,4 +1,11 @@
-import { defineComponent, ref, Ref, reactive, watchEffect } from 'vue'
+import {
+  defineComponent,
+  ref,
+  Ref,
+  reactive,
+  watchEffect,
+  shallowRef
+} from 'vue'
 import { createUseStyles } from 'vue-jss'
 
 import MonacoEditor from './components/MonacoEditor'
@@ -7,8 +14,10 @@ import demos from './demos'
 
 import SchemaForm, { ThemeProvider } from '../lib'
 import themeDefault from '../lib/theme-default'
+import customFormat from './plugins/customFormat'
+import customKeyword from './plugins/customKeyword'
 
-console.log(themeDefault)
+// console.log(themeDefault)
 
 type Schema = any
 type UISchema = any
@@ -110,29 +119,33 @@ export default defineComponent({
       schemaCode: string
       dataCode: string
       uiSchemaCode: string
-      customValidate?: any
+      customValidate?: ((d: any, e: any) => void) | undefined
     } = reactive({
       schema: null,
       data: {},
       uiSchema: {},
       schemaCode: '',
       dataCode: '',
-      uiSchemaCode: ''
+      uiSchemaCode: '',
+      customValidate: undefined
     })
+
+    const uiSchema = shallowRef({})
 
     watchEffect(() => {
       const index = selectedRef.value
       const d: any = demos[index]
       demo.schema = d.schema
       demo.data = d.default
-      demo.uiSchema = d.uiSchema
+      // demo.uiSchema = d.uiSchema
+      uiSchema.value = d.uiSchema
       demo.schemaCode = toJson(d.schema)
       demo.dataCode = toJson(d.default)
       demo.uiSchemaCode = toJson(d.uiSchema)
       demo.customValidate = d.customValidate
     })
 
-    const methodRef: Ref<any> = ref()
+    // const methodRef: Ref<any> = ref()
 
     const classesRef = useStyles()
 
@@ -159,16 +172,20 @@ export default defineComponent({
     const handleDataChange = (v: string) => handleCodeChange('data', v)
     const handleUISchemaChange = (v: string) => handleCodeChange('uiSchema', v)
 
-    const handleValidate = () => {
-      const { valid, errors, errorSchema } = methodRef.value.doValidate()
-      console.log(valid, errors, errorSchema)
+    const contextRef = ref()
+    const nameRef = ref()
+
+    function validateForm() {
+      contextRef.value.doValidate().then((result: any) => {
+        console.log(result, '......')
+      })
     }
 
     return () => {
       const classes = classesRef.value
       const selected = selectedRef.value
 
-      console.log(methodRef)
+      // console.log(methodRef, nameRef)
 
       return (
         // <VjsfDefaultThemeProvider>
@@ -218,6 +235,12 @@ export default defineComponent({
                   schema={demo.schema}
                   onChange={handleChange}
                   value={demo.data}
+                  contextRef={contextRef}
+                  ref={nameRef}
+                  customValidate={demo.customValidate}
+                  uiSchema={uiSchema.value || {}}
+                  customFormats={customFormat}
+                  customKeywords={customKeyword}
                 />
               </ThemeProvider>
               {/* <SchemaForm
@@ -236,7 +259,7 @@ export default defineComponent({
               ]}
               /> */}
               <div style={{ marginTop: '20px' }}>
-                <button onClick={handleValidate}>校验</button>
+                <button onClick={validateForm}>校验</button>
               </div>
             </div>
           </div>
