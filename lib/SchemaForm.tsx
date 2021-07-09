@@ -85,6 +85,7 @@ export default defineComponent({
           validatorRef.value.addFormat(format.name, format.definition)
         })
       }
+      // 自定义关键字
       if (props.customKeywords) {
         const customKeywords = Array.isArray(props.customKeywords)
           ? props.customKeywords
@@ -106,13 +107,13 @@ export default defineComponent({
       () => props.value,
       () => {
         if (validateResolveRef.value) {
-          doValidate()
+          doValidateResolve()
         }
       },
       { deep: true }
     )
 
-    async function doValidate() {
+    async function doValidateResolve() {
       console.log('start validate ------')
       const index = (validateIndex.value += 1)
       const result = await validateFormData(
@@ -138,7 +139,7 @@ export default defineComponent({
               console.log('-----')
               return new Promise((resolve) => {
                 validateResolveRef.value = resolve
-                doValidate()
+                doValidateResolve()
               })
             }
           }

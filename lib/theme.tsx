@@ -19,6 +19,7 @@ import { useVJSFContext } from './context'
 
 const THEME_PROVIDER_KEY = Symbol()
 
+// provide Theme
 const ThemeProvider = defineComponent({
   name: 'VJSFThemeProvider',
   props: {
@@ -36,6 +37,7 @@ const ThemeProvider = defineComponent({
   }
 })
 
+// inject Theme
 // eslint-disable-next-line
 export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(
   name: T,
