@@ -1,6 +1,8 @@
+// provide and inject
 import { inject, Ref } from 'vue'
 import { CommonFieldDefine, CommonWidgetDefine, Schema } from './types'
 
+// provide key
 export const SchemaFormContextKey = Symbol()
 
 // eslint-disable-next-line
